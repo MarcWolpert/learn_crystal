@@ -1,0 +1,13 @@
+name: learn_crystal
+version: 0.1.0
+
+authors:
+  - Marc Wolpert <mewolpert@gmail.com>
+
+targets:
+  learn_crystal:
+    main: 01-introduction.cr
+
+crystal: '>= 1.14.1'
+
+license: MIT
