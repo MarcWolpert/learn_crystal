@@ -157,15 +157,148 @@ module LearnCrystal_Literals_TypesAndMethods
     in Foo::Z then puts "var is Foo::Z"
     end
 
-    # select statement
-    select
-    when Foo::X == 1 then puts "1"
-    when Foo::X == 2 then puts "2"
-    when Foo::X == 3 then puts "3"
-    else
-      puts "something else"
+    # select statement, chooses from the first non-blocking operation
+    # select
+    # when foo = foo_channel.receive
+    #   puts foo
+    # when bar = bar_channel.receive?
+    #   puts bar
+    # when baz_channel.send
+    #   exit
+    # when timeout(5.seconds)
+    #   puts "Timeout"
+    # //there is also an "else" branch that can complete immediately
+    # end
+
+    # while loops
+    some_condition = 0
+    while some_condition <= 5
+      some_condition += 1
+      puts some_condition
+      break if some_condition == 3
+    end
+    # regular loops
+    some_condition = 0
+    loop do
+      some_condition += 1
+      puts some_condition
+      break if some_condition == 3
     end
 
+    # assignment at break condition
+    some_condition = 0
+    x = while some_condition <= 5
+      some_condition += 1
+      break "three" if some_condition == 3
+      break "four" if some_condition == 4
+    end
+    # if break but no value assigned due to loop exiting normally, the assignment becomes nil
+    # break with multiple arguments are packed into Tuple instances
+    x = while 2 > 1
+      break 3, 4
+    end
+    p! x, typeof(x)
+    # the type is determined by the union of all the break types
+    # here it would be String | Int | Nil
+    x = while 1 > 2
+      if rand < 0.5
+        break 3
+      else
+        break '4'
+      end
+    end
+    p! typeof(x) # => (Char | Int32 | Nil)
+    # if a particular expresion with no breaks has the NoReturn type, the loop can never be exited in the same scope
+    # x = while true
+    #   puts "yes"
+    # end
+    # p! x, typeof(x) //UNREACHABLE
+
+    # def block(&)
+    #   puts yield
+    # end
+
+    # block do
+    #   next "hello"
+    # end
+
+    # # The above prints "hello"
+
+    # lhs evaluation, if truthy evaluates rhs and has that value
+    p! true && false
+    # falsey rhs, if truthy only lhs
+    p! false && true
     return nil
   end
+  def self.requiring_files: Nil
+    # the default way to require files is 
+    # require "filename"
+      # by defualt the require path includes two locations:
+      # the *lib* directory relative to the cwd
+    # require "./filename"
+      # searches for all the subdirectories with the specified filename
+    # require "foo/*" //will require all files in one level below foo/
+    # require "foo/**" will require all .cr files below the foo directory recursively
+    return nil
+  end
+  
+end
+
+class Types_and_methods
+  # initialize instance variables outside 'initialize' method
+  @age = 0
+  @address : String = "hello"
+  # everything is an object meaning:
+    # it has a type and can respond to some methods
+  getter name : String
+  property age
+  def initialize(name : String)
+    # what's really going on here is the allocation of space 
+    # initialization of the instance variables
+    # class Person
+    #   def self.new(name : String)
+    #     instance = Person.allocate
+    #     instance.initialize(name)
+    #     instance
+    #   end
+    # end
+    @name=name
+    @age = 0
+  end
+  def name
+    @name
+  end
+  def age
+    @age
+  end
+  def become_older
+    @age +=1
+  end
+  def become_older
+    # example of method redefinition with last one being picked
+    puts "This is age + 1: #{@age+1}"
+    previous_def
+    puts "This is age + 2: #{@age+2}"
+    @age+=2
+  end
+  def become_older(num : Int32)
+    @age+=num
+  end
+  def foo( *x : *{Int32, String})
+  # positional and type restriction
+  p! x
+end
+  def bar( **x : **T) forall T
+    p! T
+  T
+  end
+  #   Additionally, single splat restrictions may be used inside a generic type as well, to extract multiple type arguments at once:
+
+  # def foo(x : Proc(*T, Int32)) forall T
+  #   T
+  # end
+
+  # foo(->(x : Int32, y : Int32) { x + y }) # => Tuple(Int32, Int32)
+  # foo(->(x : Bool) { x ? 1 : 0 })         # => Tuple(Bool)
+  # foo(->{ 1 })                            # => Tuple()
 end
