@@ -230,18 +230,18 @@ module LearnCrystal_Literals_TypesAndMethods
     p! false && true
     return nil
   end
-  def self.requiring_files: Nil
-    # the default way to require files is 
+
+  def self.requiring_files : Nil
+    # the default way to require files is
     # require "filename"
-      # by defualt the require path includes two locations:
-      # the *lib* directory relative to the cwd
+    # by defualt the require path includes two locations:
+    # the *lib* directory relative to the cwd
     # require "./filename"
-      # searches for all the subdirectories with the specified filename
+    # searches for all the subdirectories with the specified filename
     # require "foo/*" //will require all files in one level below foo/
     # require "foo/**" will require all .cr files below the foo directory recursively
     return nil
   end
-  
 end
 
 class Types_and_methods
@@ -249,11 +249,13 @@ class Types_and_methods
   @age = 0
   @address : String = "hello"
   # everything is an object meaning:
-    # it has a type and can respond to some methods
+  # it has a type and can respond to some methods
   getter name : String
   property age
+  @base_point = Point.new
+
   def initialize(name : String)
-    # what's really going on here is the allocation of space 
+    # what's really going on here is the allocation of space
     # initialization of the instance variables
     # class Person
     #   def self.new(name : String)
@@ -262,36 +264,44 @@ class Types_and_methods
     #     instance
     #   end
     # end
-    @name=name
+    @name = name
     @age = 0
   end
+
   def name
     @name
   end
+
   def age
     @age
   end
+
   def become_older
-    @age +=1
+    @age += 1
   end
+
   def become_older
     # example of method redefinition with last one being picked
-    puts "This is age + 1: #{@age+1}"
+    puts "This is age + 1: #{@age + 1}"
     previous_def
-    puts "This is age + 2: #{@age+2}"
-    @age+=2
+    puts "This is age + 2: #{@age + 2}"
+    @age += 2
   end
+
   def become_older(num : Int32)
-    @age+=num
+    @age += num
   end
-  def foo( *x : *{Int32, String})
-  # positional and type restriction
-  p! x
-end
-  def bar( **x : **T) forall T
+
+  def foo(*x : *{Int32, String})
+    # positional and type restriction
+    p! x
+  end
+
+  def bar(**x : **T) forall T
     p! T
-  T
+    T
   end
+
   #   Additionally, single splat restrictions may be used inside a generic type as well, to extract multiple type arguments at once:
 
   # def foo(x : Proc(*T, Int32)) forall T
@@ -301,5 +311,32 @@ end
   # foo(->(x : Int32, y : Int32) { x + y }) # => Tuple(Int32, Int32)
   # foo(->(x : Bool) { x ? 1 : 0 })         # => Tuple(Bool)
   # foo(->{ 1 })                            # => Tuple()
-#  
+  #
+  struct Point
+    property x, y
+    # more complex constants
+    @THIRD = begin
+      if Random.rand(2) % 2 == 0
+        25
+      else
+        30
+      end
+    end
+
+    def initialize(@x = "Hello ", @y = "World!")
+      puts "X: #{x}\nY: #{y}"
+      puts self.@THIRD
+    end
+  end
+
+  def twice(&)
+    yield
+    yield
+  end
+
+  def do_twice
+    self.twice do
+      puts "Hello!!"
+    end
+  end
 end

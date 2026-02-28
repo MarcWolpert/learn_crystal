@@ -32,7 +32,8 @@ end
 p! types_and_methods.become_older(3)
 p! types_and_methods.foo(3, "")
 puts types_and_methods.bar(x: 1, y: 2)
-
+p = Types_and_methods.new(name = "John")
+p.do_twice
 # exception handling
 # type grammar
 # type reflection
