@@ -1,6 +1,7 @@
 # import the LearnCrystal module
 require "./src/01-basics"
 require "./src/02-intermediate[literals..typesAndMethods]"
+require "./src/03-intermediate[Exceptions..TypeAutocasting]"
 
 # tutorial section
 LearnCrystal_Basics.hello_world
@@ -35,6 +36,7 @@ puts types_and_methods.bar(x: 1, y: 2)
 p = Types_and_methods.new(name = "John")
 p.do_twice
 # exception handling
+LearnCrystal_Exceptions_TypeAutocasting.exception
 # type grammar
 # type reflection
 # type autocasting
